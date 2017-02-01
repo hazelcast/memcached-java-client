@@ -125,7 +125,7 @@ public class MainClient {
     }
 
     private void loadData() {
-        int LOADER_THREAD_COUNT = 2;
+        int LOADER_THREAD_COUNT = Integer.valueOf(properties.getProperty("loader_threads"));
         ExecutorService LOADERS = Executors.newFixedThreadPool(LOADER_THREAD_COUNT);
 
         int perThread = maxKeys/LOADER_THREAD_COUNT;
