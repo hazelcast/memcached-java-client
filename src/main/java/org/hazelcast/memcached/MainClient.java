@@ -10,10 +10,7 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainClient {
@@ -152,9 +149,11 @@ public class MainClient {
     }
 
     class Loader implements Runnable {
-        int start;
-        int last;
-        CountDownLatch latch;
+        private int start;
+        private int last;
+
+        private CountDownLatch latch;
+        private Random valueType;
 
         Loader(int start, int last, CountDownLatch latch) {
             this.start = start;
@@ -163,13 +162,51 @@ public class MainClient {
         }
 
         public void run() {
+            valueType = new Random();
             int counter =0;
             for(int i=start; i< last; i++) {
-                put(buildKey(i), new byte[1024]);
+                put(buildKey(i), getValue(ThreadLocalRandom.current().nextInt(4, 13)));
                 counter++;
             }
             System.out.println("Entries loaded by this thread: "+counter);
             latch.countDown();
+        }
+
+        private byte[] getValue(int type) {
+            byte[] value;
+            switch(type) {
+                case 4:
+                    value = new byte[4096];
+                    break;
+                case 5:
+                    value = new byte[5120];
+                    break;
+                case 6:
+                    value = new byte[6144];
+                    break;
+                case 7:
+                    value = new byte[7168];
+                    break;
+                case 8:
+                    value = new byte[8192];
+                    break;
+                case 9:
+                    value = new byte[9216];
+                    break;
+                case 10:
+                    value = new byte[10240];
+                    break;
+                case 11:
+                    value = new byte[11264];
+                    break;
+                case 12:
+                    value = new byte[12288];
+                    break;
+                default:
+                    value = new byte[1024];
+                    break;
+            }
+            return value;
         }
     }
 
