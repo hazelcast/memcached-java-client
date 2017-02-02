@@ -153,7 +153,6 @@ public class MainClient {
         private int last;
 
         private CountDownLatch latch;
-        private Random valueType;
 
         Loader(int start, int last, CountDownLatch latch) {
             this.start = start;
@@ -162,7 +161,6 @@ public class MainClient {
         }
 
         public void run() {
-            valueType = new Random();
             int counter =0;
             for(int i=start; i< last; i++) {
                 put(buildKey(i), getValue(ThreadLocalRandom.current().nextInt(4, 13)));
