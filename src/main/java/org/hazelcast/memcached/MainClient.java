@@ -3,7 +3,6 @@ package org.hazelcast.memcached;
 import net.spy.memcached.AddrUtil;
 import net.spy.memcached.BinaryConnectionFactory;
 import net.spy.memcached.MemcachedClient;
-import net.spy.memcached.internal.OperationFuture;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -98,8 +97,8 @@ public class MainClient {
         return "K"+keyID;
     }
 
-    private OperationFuture<Boolean> put(String key, byte[] value) {
-        return CLIENT.set(key, ttl, value);
+    private void put(String key, byte[] value) {
+        CLIENT.set(key, ttl, value);
     }
 
     private Object get(String key) {
