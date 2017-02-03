@@ -1,5 +1,7 @@
 package org.hazelcast.memcached;
 
+import com.hazelcast.logging.ILogger;
+import com.hazelcast.logging.Logger;
 import net.spy.memcached.AddrUtil;
 import net.spy.memcached.BinaryConnectionFactory;
 import net.spy.memcached.MemcachedClient;
@@ -10,30 +12,42 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class MainClient {
+
+    private final static ILogger log = Logger.getLogger(MainClient.class);
 
     private MemcachedClient CLIENT;
     private ExecutorService SERVICE;
     private String propertiesName = "/HazelcastMemcachedClient.properties";
 
-    private AtomicInteger TxnCounter;
+    private AtomicInteger txnCounter;
+    private AtomicLong latencyBucket;
+    private AtomicInteger latencyCounter;
     private Properties properties;
-    private boolean isStopped;
+    private AtomicBoolean isStopped;
     private int maxKeys;
     private int ttl;
+    private int duration;
+
+    private Thread latencyMonitor;
+    private Thread tpsMonitor;
+
 
     MainClient() {
         setProperties();
         initGlobal();
         initServicePool();
-        startTPSMonitor();
         initConnection();
         String opType = properties.getProperty("operation_type");
         if(opType.equalsIgnoreCase("load"))
             loadData();
         else {
+            startTPSMonitor();
+            startLatencyMonitor();
             mutateCluster();
         }
     }
@@ -52,45 +66,88 @@ public class MainClient {
     }
 
     private void initTestClock() {
-        final int duration = Integer.valueOf(properties.getProperty("test_duration"));
+        isStopped = new AtomicBoolean();
+        duration = Integer.valueOf(properties.getProperty("test_duration"));
 
-        final TimerTask task = new TimerTask() {
+        final TimerTask shutdownTask = new TimerTask() {
             @Override
             public void run() {
-                isStopped = true;
+                isStopped.set(true);
+                initiateShutdown();
             }
         };
         Thread timer = new Thread() {
             public void run() {
-                new Timer().schedule(task, duration*1000);
+                new Timer().schedule(shutdownTask, duration*1000);
             }
         };
         timer.setDaemon(true);
         timer.start();
     }
 
+    private void startLatencyMonitor() {
+        latencyBucket = new AtomicLong();
+        latencyCounter = new AtomicInteger();
+        latencyMonitor = new Thread() {
+            public void run() {
+                while(!isInterrupted()) {
+                    try {
+                        sleep(5000);
+                        long latency = latencyBucket.getAndSet(0)/latencyCounter.getAndSet(0);
+                        log.info("Average latency in last 5 seconds: "+ (latency/1000) + " us");
+                    } catch (InterruptedException e) {
+                    }
+                }
+            }
+        };
+        latencyMonitor.setDaemon(true);
+        latencyMonitor.start();
+    }
+
+    private void startTPSMonitor() {
+        txnCounter = new AtomicInteger();
+        final int tpsInterval = Integer.valueOf(properties.getProperty("tps_interval"));
+        tpsMonitor = new Thread() {
+            public void run() {
+                try {
+                    while(!isInterrupted()) {
+                        sleep(tpsInterval * 1000);
+                        log.info("Transactions processed per second: "+ txnCounter.getAndSet(0)/tpsInterval);
+                    }
+                } catch (InterruptedException e) {
+                }
+            }
+        };
+        tpsMonitor.setDaemon(true);
+        tpsMonitor.start();
+    }
+
+
     private void mutateCluster() {
         initTestClock();
 
+        log.info("Starting benchmark test for "+duration+" seconds");
+
         final int readOpsPercentile = Integer.valueOf(properties.getProperty("read_operations_percentile"));
-
-
         Random rand = new Random();
-        while(!isStopped) {
+        while(!isStopped.get()) {
             final String key = buildKey(rand.nextInt(maxKeys));
             SERVICE.execute(new Runnable() {
                 public void run() {
-
-                    TxnCounter.incrementAndGet();
-                    if(TxnCounter.get() % 10 < readOpsPercentile) {
+                    long start = System.nanoTime();
+                    if(txnCounter.get() % 10 < readOpsPercentile) {
                         get(key);
                     } else {
                         put(key, new byte[1024]);
                     }
+                    long latency = System.nanoTime() - start;
+                    txnCounter.incrementAndGet();
+                    latencyCounter.incrementAndGet();
+                    latencyBucket.addAndGet(latency);
                 }
             });
         }
-        initiateShutdown();
+
     }
 
     private String buildKey(int keyID) {
@@ -102,13 +159,19 @@ public class MainClient {
     }
 
     private Object get(String key) {
-        return CLIENT.get(key);
+        return CLIENT.asyncGet(key);
     }
 
     private void initiateShutdown() {
-        System.out.println("Test complete. Initiating shutdown...");
-        SERVICE.shutdown();
-        CLIENT.shutdown();
+        log.info("Test complete. Initiating shutdown...");
+
+        latencyMonitor.interrupt();
+        tpsMonitor.interrupt();
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+        }
+        System.exit(0);
     }
 
     private void setProperties() {
@@ -124,10 +187,9 @@ public class MainClient {
         int LOADER_THREAD_COUNT = Integer.valueOf(properties.getProperty("loader_threads"));
         ExecutorService LOADERS = Executors.newFixedThreadPool(LOADER_THREAD_COUNT);
 
-        int perThread = maxKeys/LOADER_THREAD_COUNT;
-
         CountDownLatch latch = new CountDownLatch(LOADER_THREAD_COUNT);
 
+        int perThread = maxKeys/LOADER_THREAD_COUNT;
         for(int i=0; i<LOADER_THREAD_COUNT; i++) {
             int start = perThread * i;
             int last = perThread * (i+1);
@@ -138,13 +200,13 @@ public class MainClient {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("Load complete.. ");
+        log.info("Load complete.. ");
         try {
             LOADERS.awaitTermination(5, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        CLIENT.shutdown();
+       // CLIENT.shutdown();
     }
 
     class Loader implements Runnable {
@@ -165,7 +227,7 @@ public class MainClient {
                 put(buildKey(i), getValue(ThreadLocalRandom.current().nextInt(4, 13)));
                 counter++;
             }
-            System.out.println("Entries loaded by this thread: "+counter);
+            log.info("Entries loaded by this thread: "+counter);
             latch.countDown();
         }
 
@@ -210,26 +272,6 @@ public class MainClient {
     private void initServicePool() {
         SERVICE = Executors.newFixedThreadPool(Integer.valueOf(properties.getProperty("service_pool_size")));
     }
-
-    private void startTPSMonitor() {
-        TxnCounter = new AtomicInteger();
-        final int tpsInterval = Integer.valueOf(properties.getProperty("tps_interval"));
-        Thread monitor = new Thread() {
-            public void run() {
-                    try {
-                        while(!interrupted()) {
-                            sleep(tpsInterval * 1000);
-                            System.out.println("Transactions processed per second: "+TxnCounter.getAndSet(0)/tpsInterval);
-                        }
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-            }
-        };
-        monitor.setDaemon(true);
-        monitor.start();
-    }
-
 
     public static void main(String[] args) {
         new MainClient();
