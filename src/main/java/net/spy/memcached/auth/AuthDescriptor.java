@@ -57,7 +57,7 @@ public class AuthDescriptor {
     cbh = h;
     authAttempts = 0;
     String authThreshhold =
-        System.getProperty("net.spy.memcached.auth.AuthThreshold");
+        System.getProperty("net.spy.client.auth.AuthThreshold");
     if (authThreshhold != null) {
       allowedAuthAttempts = Integer.parseInt(authThreshhold);
     } else {

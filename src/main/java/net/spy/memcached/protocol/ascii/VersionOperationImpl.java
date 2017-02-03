@@ -32,7 +32,7 @@ import net.spy.memcached.ops.StatusCode;
 import net.spy.memcached.ops.VersionOperation;
 
 /**
- * Operation to request the version of a memcached server.
+ * Operation to request the version of a client server.
  */
 final class VersionOperationImpl extends OperationImpl implements
     VersionOperation, NoopOperation {

@@ -105,7 +105,7 @@ public interface Operation {
   /**
    * Set a reference to the node that will be/is handling this operation.
    *
-   * @param to a memcached node
+   * @param to a client node
    */
   void setHandlingNode(MemcachedNode to);
 

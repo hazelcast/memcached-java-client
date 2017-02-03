@@ -35,7 +35,7 @@ import net.spy.memcached.ops.OperationStatus;
 import net.spy.memcached.ops.StatusCode;
 
 /**
- * Operation for mutating integers inside of memcached.
+ * Operation for mutating integers inside of client.
  */
 final class MutatorOperationImpl extends OperationImpl implements
     MutatorOperation {

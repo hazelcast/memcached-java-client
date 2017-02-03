@@ -95,7 +95,7 @@ public class BulkGetFuture<T>
   /*
    * (non-Javadoc)
    *
-   * @see net.spy.memcached.internal.BulkFuture#getSome(long,
+   * @see net.spy.client.internal.BulkFuture#getSome(long,
    * java.util.concurrent.TimeUnit)
    */
   public Map<String, T> getSome(long to, TimeUnit unit)
@@ -198,7 +198,7 @@ public class BulkGetFuture<T>
   /*
    * set to true if timeout was reached.
    *
-   * @see net.spy.memcached.internal.BulkFuture#isTimeout()
+   * @see net.spy.client.internal.BulkFuture#isTimeout()
    */
   public boolean isTimeout() {
     return timeout;

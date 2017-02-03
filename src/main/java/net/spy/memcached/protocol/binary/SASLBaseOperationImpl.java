@@ -62,7 +62,7 @@ public abstract class SASLBaseOperationImpl extends OperationImpl {
   @Override
   public void initialize() {
     try {
-      SaslClient sc = Sasl.createSaslClient(mech, null, "memcached",
+      SaslClient sc = Sasl.createSaslClient(mech, null, "client",
           serverName, props, cbh);
 
       byte[] response = buildResponse(sc);

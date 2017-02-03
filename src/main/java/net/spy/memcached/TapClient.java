@@ -47,7 +47,7 @@ import net.spy.memcached.tapmessage.TapOpcode;
 import net.spy.memcached.tapmessage.TapStream;
 
 /**
- * A tap client for memcached.
+ * A tap client for client.
  */
 public class TapClient {
   protected BlockingQueue<Object> rqueue;
@@ -160,7 +160,7 @@ public class TapClient {
    *          stream.
    * @return the operation that controls the tap stream.
    * @throws ConfigurationException a bad configuration was received from the
-   *           memcached cluster.
+   *           client cluster.
    * @throws IOException if there are errors connecting to the cluster.
    */
   public TapStream tapCustom(final String id, final RequestMessage message)
@@ -197,14 +197,14 @@ public class TapClient {
   }
 
   /**
-   * Specifies a tap stream that will take a snapshot of items in memcached and
+   * Specifies a tap stream that will take a snapshot of items in client and
    * send them through a tap stream.
    *
    * @param id the named tap id that can be used to resume a disconnected tap
    *          stream
    * @return the operation that controls the tap stream.
    * @throws ConfigurationException a bad configuration was received from the
-   *           memcached cluster.
+   *           client cluster.
    * @throws IOException If there are errors connecting to the cluster.
    */
   public TapStream tapDump(final String id) throws IOException,

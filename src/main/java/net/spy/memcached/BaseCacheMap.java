@@ -30,16 +30,16 @@ import java.util.Set;
 import net.spy.memcached.transcoders.Transcoder;
 
 /**
- * Base class for a Map interface to memcached.
+ * Base class for a Map interface to client.
  *
  * <p>
- * This Map interface makes memcached a bit easier to use for some purposes by
+ * This Map interface makes client a bit easier to use for some purposes by
  * providing a limited Map implementation.
  * </p>
  *
  * <p>
  * Do note that nothing that iterates over the map will work (such is
- * memcached). All iteration mechanisms will return empty iterators and such.
+ * client). All iteration mechanisms will return empty iterators and such.
  * </p>
  *
  * @param <V> the type of value taken and returned by this Map's underlying

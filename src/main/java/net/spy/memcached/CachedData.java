@@ -34,7 +34,7 @@ public final class CachedData {
    * The maximum size that should be considered storing in a server.
    */
   /*
-   * though memcached no longer has a maximum size, rather than remove this
+   * though client no longer has a maximum size, rather than remove this
    * entirely just bump it up for now
    */
   public static final int MAX_SIZE = 20 * 1024 * 1024;

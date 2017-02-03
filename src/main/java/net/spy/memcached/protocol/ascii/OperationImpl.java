@@ -36,7 +36,7 @@ import net.spy.memcached.ops.StatusCode;
 import net.spy.memcached.protocol.BaseOperationImpl;
 
 /**
- * Operations on a memcached connection.
+ * Operations on a client connection.
  */
 abstract class OperationImpl extends BaseOperationImpl implements Operation {
 
@@ -80,7 +80,7 @@ abstract class OperationImpl extends BaseOperationImpl implements Operation {
   /*
    * (non-Javadoc)
    *
-   * @see net.spy.memcached.protocol.ascii.Operation#getReadType()
+   * @see net.spy.client.protocol.ascii.Operation#getReadType()
    */
   protected final OperationReadType getReadType() {
     return readType;
@@ -162,7 +162,7 @@ abstract class OperationImpl extends BaseOperationImpl implements Operation {
    * (non-Javadoc)
    *
    * @see
-   * net.spy.memcached.protocol.ascii.Operation#handleLine(java.lang.String)
+   * net.spy.client.protocol.ascii.Operation#handleLine(java.lang.String)
    */
   public abstract void handleLine(String line);
 

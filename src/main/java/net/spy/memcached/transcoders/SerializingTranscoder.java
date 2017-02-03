@@ -75,7 +75,7 @@ public class SerializingTranscoder extends BaseSerializingTranscoder implements
   /*
    * (non-Javadoc)
    *
-   * @see net.spy.memcached.Transcoder#decode(net.spy.memcached.CachedData)
+   * @see net.spy.client.Transcoder#decode(net.spy.client.CachedData)
    */
   public Object decode(CachedData d) {
     byte[] data = d.getData();
@@ -124,7 +124,7 @@ public class SerializingTranscoder extends BaseSerializingTranscoder implements
   /*
    * (non-Javadoc)
    *
-   * @see net.spy.memcached.Transcoder#encode(java.lang.Object)
+   * @see net.spy.client.Transcoder#encode(java.lang.Object)
    */
   public CachedData encode(Object o) {
     byte[] b = null;

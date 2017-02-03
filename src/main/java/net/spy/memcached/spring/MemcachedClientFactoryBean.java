@@ -47,7 +47,7 @@ import org.springframework.beans.factory.FactoryBean;
  * <pre>
  * {@code
  * <bean id="memcachedClient"
- *     class="net.spy.memcached.utils.MemcachedClientFactoryBean">
+ *     class="net.spy.client.utils.MemcachedClientFactoryBean">
  *   <property name="servers" value="${pajamas.remoteHosts}"/>
  *   <property name="protocol" value="${pajamas.client.protocol}"/>
  *   <property name="transcoder"/>

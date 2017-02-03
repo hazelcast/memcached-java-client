@@ -42,7 +42,7 @@ public enum FailureMode {
    *
    * <p>
    * This failure mode is appropriate when you have a rare short downtime of a
-   * memcached node that will be back quickly, and your app is written to not
+   * client node that will be back quickly, and your app is written to not
    * wait very long for async command completion.
    * </p>
    */

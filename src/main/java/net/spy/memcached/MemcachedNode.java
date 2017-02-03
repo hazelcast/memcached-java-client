@@ -33,7 +33,7 @@ import java.util.Collection;
 import net.spy.memcached.ops.Operation;
 
 /**
- * Interface defining a connection to a memcached server.
+ * Interface defining a connection to a client server.
  */
 public interface MemcachedNode {
 

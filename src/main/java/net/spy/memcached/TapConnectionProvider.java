@@ -58,9 +58,9 @@ public class TapConnectionProvider extends SpyObject implements
   protected final AuthThreadMonitor authMonitor = new AuthThreadMonitor();
 
   /**
-   * Get a tap client operating on the specified memcached locations.
+   * Get a tap client operating on the specified client locations.
    *
-   * @param ia the memcached locations
+   * @param ia the client locations
    * @throws IOException if connections cannot be established
    */
   public TapConnectionProvider(InetSocketAddress... ia) throws IOException {
@@ -68,7 +68,7 @@ public class TapConnectionProvider extends SpyObject implements
   }
 
   /**
-   * Get a tap client operating on the specified memcached locations.
+   * Get a tap client operating on the specified client locations.
    *
    * @param addrs the socket addrs
    * @throws IOException if connections cannot be established
@@ -79,7 +79,7 @@ public class TapConnectionProvider extends SpyObject implements
   }
 
   /**
-   * Get a tap client operating on the specified memcached locations.
+   * Get a tap client operating on the specified client locations.
    *
    * @param cf the connection factory to configure connections for this client
    * @param addrs the socket addresses

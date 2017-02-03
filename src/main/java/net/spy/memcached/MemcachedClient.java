@@ -81,7 +81,7 @@ import net.spy.memcached.transcoders.Transcoder;
 import net.spy.memcached.util.StringUtils;
 
 /**
- * Client to a memcached server.
+ * Client to a client server.
  *
  * <h2>Basic usage</h2>
  *
@@ -99,8 +99,8 @@ import net.spy.memcached.util.StringUtils;
  *
  * <p>
  * MemcachedClient may be processing a great deal of asynchronous messages or
- * possibly dealing with an unreachable memcached, which may delay processing.
- * If a memcached is disabled, for example, MemcachedConnection will continue to
+ * possibly dealing with an unreachable client, which may delay processing.
+ * If a client is disabled, for example, MemcachedConnection will continue to
  * attempt to reconnect and replay pending operations until it comes back up. To
  * prevent this from causing your application to hang, you can use one of the
  * asynchronous mechanisms to time out a request and cancel the operation to the
@@ -108,7 +108,7 @@ import net.spy.memcached.util.StringUtils;
  * </p>
  *
  * <pre>
- *      // Get a memcached client connected to several servers
+ *      // Get a client client connected to several servers
  *      // over the binary protocol
  *      MemcachedClient c = new MemcachedClient(new BinaryConnectionFactory(),
  *              AddrUtil.getAddresses("server1:11211 server2:11211"));
@@ -133,7 +133,7 @@ import net.spy.memcached.util.StringUtils;
  * <p>Optionally, it is possible to activate a check that makes sure that
  * the node is alive and responding before running actual operations (even
  * before authentication. Only enable this if you are sure that you do not
- * run into issues during connection (some memcached services have problems
+ * run into issues during connection (some client services have problems
  * with it). You can enable it by setting the net.spy.verifyAliveOnConnect
  * System Property to "true".</p>
  */
@@ -161,9 +161,9 @@ public class MemcachedClient extends SpyObject implements MemcachedClientIF,
   protected final ExecutorService executorService;
 
   /**
-   * Get a memcache client operating on the specified memcached locations.
+   * Get a memcache client operating on the specified client locations.
    *
-   * @param ia the memcached locations
+   * @param ia the client locations
    * @throws IOException if connections cannot be established
    */
   public MemcachedClient(InetSocketAddress... ia) throws IOException {
@@ -171,7 +171,7 @@ public class MemcachedClient extends SpyObject implements MemcachedClientIF,
   }
 
   /**
-   * Get a memcache client over the specified memcached locations.
+   * Get a memcache client over the specified client locations.
    *
    * @param addrs the socket addrs
    * @throws IOException if connections cannot be established
@@ -181,7 +181,7 @@ public class MemcachedClient extends SpyObject implements MemcachedClientIF,
   }
 
   /**
-   * Get a memcache client over the specified memcached locations.
+   * Get a memcache client over the specified client locations.
    *
    * @param cf the connection factory to configure connections for this client
    * @param addrs the socket addresses
@@ -785,8 +785,8 @@ public class MemcachedClient extends SpyObject implements MemcachedClientIF,
    * Add an object to the cache iff it does not exist already.
    *
    * <p>
-   * The {@code exp} value is passed along to memcached exactly as given,
-   * and will be processed per the memcached protocol specification:
+   * The {@code exp} value is passed along to client exactly as given,
+   * and will be processed per the client protocol specification:
    * </p>
    *
    * <p>
@@ -824,8 +824,8 @@ public class MemcachedClient extends SpyObject implements MemcachedClientIF,
    * exist already.
    *
    * <p>
-   * The {@code exp} value is passed along to memcached exactly as given,
-   * and will be processed per the memcached protocol specification:
+   * The {@code exp} value is passed along to client exactly as given,
+   * and will be processed per the client protocol specification:
    * </p>
    *
    * <p>
@@ -859,8 +859,8 @@ public class MemcachedClient extends SpyObject implements MemcachedClientIF,
    * Set an object in the cache regardless of any existing value.
    *
    * <p>
-   * The {@code exp} value is passed along to memcached exactly as given,
-   * and will be processed per the memcached protocol specification:
+   * The {@code exp} value is passed along to client exactly as given,
+   * and will be processed per the client protocol specification:
    * </p>
    *
    * <p>
@@ -898,8 +898,8 @@ public class MemcachedClient extends SpyObject implements MemcachedClientIF,
    * existing value.
    *
    * <p>
-   * The {@code exp} value is passed along to memcached exactly as given,
-   * and will be processed per the memcached protocol specification:
+   * The {@code exp} value is passed along to client exactly as given,
+   * and will be processed per the client protocol specification:
    * </p>
    *
    * <p>
@@ -934,8 +934,8 @@ public class MemcachedClient extends SpyObject implements MemcachedClientIF,
    * given key.
    *
    * <p>
-   * The {@code exp} value is passed along to memcached exactly as given,
-   * and will be processed per the memcached protocol specification:
+   * The {@code exp} value is passed along to client exactly as given,
+   * and will be processed per the client protocol specification:
    * </p>
    *
    * <p>
@@ -973,8 +973,8 @@ public class MemcachedClient extends SpyObject implements MemcachedClientIF,
    * transcoder) iff there is already a value for the given key.
    *
    * <p>
-   * The {@code exp} value is passed along to memcached exactly as given,
-   * and will be processed per the memcached protocol specification:
+   * The {@code exp} value is passed along to client exactly as given,
+   * and will be processed per the client protocol specification:
    * </p>
    *
    * <p>
@@ -1781,7 +1781,7 @@ public class MemcachedClient extends SpyObject implements MemcachedClientIF,
   /**
    * Increment the given key by the given amount.
    *
-   * Due to the way the memcached server operates on items, incremented and
+   * Due to the way the client server operates on items, incremented and
    * decremented items will be returned as Strings with any operations that
    * return a value.
    *
@@ -1801,7 +1801,7 @@ public class MemcachedClient extends SpyObject implements MemcachedClientIF,
   /**
    * Increment the given key by the given amount.
    *
-   * Due to the way the memcached server operates on items, incremented and
+   * Due to the way the client server operates on items, incremented and
    * decremented items will be returned as Strings with any operations that
    * return a value.
    *
@@ -1821,7 +1821,7 @@ public class MemcachedClient extends SpyObject implements MemcachedClientIF,
   /**
    * Decrement the given key by the given value.
    *
-   * Due to the way the memcached server operates on items, incremented and
+   * Due to the way the client server operates on items, incremented and
    * decremented items will be returned as Strings with any operations that
    * return a value.
    *
@@ -1841,7 +1841,7 @@ public class MemcachedClient extends SpyObject implements MemcachedClientIF,
   /**
    * Decrement the given key by the given value.
    *
-   * Due to the way the memcached server operates on items, incremented and
+   * Due to the way the client server operates on items, incremented and
    * decremented items will be returned as Strings with any operations that
    * return a value.
    *
@@ -1861,7 +1861,7 @@ public class MemcachedClient extends SpyObject implements MemcachedClientIF,
   /**
    * Increment the given counter, returning the new value.
    *
-   * Due to the way the memcached server operates on items, incremented and
+   * Due to the way the client server operates on items, incremented and
    * decremented items will be returned as Strings with any operations that
    * return a value.
    *
@@ -1883,7 +1883,7 @@ public class MemcachedClient extends SpyObject implements MemcachedClientIF,
   /**
    * Increment the given counter, returning the new value.
    *
-   * Due to the way the memcached server operates on items, incremented and
+   * Due to the way the client server operates on items, incremented and
    * decremented items will be returned as Strings with any operations that
    * return a value.
    *
@@ -1905,7 +1905,7 @@ public class MemcachedClient extends SpyObject implements MemcachedClientIF,
   /**
    * Decrement the given counter, returning the new value.
    *
-   * Due to the way the memcached server operates on items, incremented and
+   * Due to the way the client server operates on items, incremented and
    * decremented items will be returned as Strings with any operations that
    * return a value.
    *
@@ -1927,7 +1927,7 @@ public class MemcachedClient extends SpyObject implements MemcachedClientIF,
   /**
    * Decrement the given counter, returning the new value.
    *
-   * Due to the way the memcached server operates on items, incremented and
+   * Due to the way the client server operates on items, incremented and
    * decremented items will be returned as Strings with any operations that
    * return a value.
    *

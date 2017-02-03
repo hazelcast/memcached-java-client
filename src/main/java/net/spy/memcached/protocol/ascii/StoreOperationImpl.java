@@ -27,7 +27,7 @@ import net.spy.memcached.ops.StoreOperation;
 import net.spy.memcached.ops.StoreType;
 
 /**
- * Operation to store data in a memcached server.
+ * Operation to store data in a client server.
  */
 final class StoreOperationImpl extends BaseStoreOperationImpl implements
     StoreOperation {

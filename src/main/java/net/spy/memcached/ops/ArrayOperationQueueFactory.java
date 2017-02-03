@@ -46,7 +46,7 @@ public class ArrayOperationQueueFactory implements OperationQueueFactory {
   /*
    * (non-Javadoc)
    *
-   * @see net.spy.memcached.ops.OperationQueueFactory#create()
+   * @see net.spy.client.ops.OperationQueueFactory#create()
    */
   public BlockingQueue<Operation> create() {
     return new ArrayBlockingQueue<Operation>(capacity);

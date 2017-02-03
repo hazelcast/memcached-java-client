@@ -50,7 +50,7 @@ public interface NodeLocator {
   Iterator<MemcachedNode> getSequence(String k);
 
   /**
-   * Get all memcached nodes. This is useful for broadcasting messages.
+   * Get all client nodes. This is useful for broadcasting messages.
    */
   Collection<MemcachedNode> getAll();
 

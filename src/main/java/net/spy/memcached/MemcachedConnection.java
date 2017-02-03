@@ -74,7 +74,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Main class for handling connections to a memcached cluster.
+ * Main class for handling connections to a client cluster.
  */
 public class MemcachedConnection extends SpyThread {
 
@@ -693,7 +693,7 @@ public class MemcachedConnection extends SpyThread {
       queueReconnect(node);
     } catch (OperationException e) {
       node.setupForAuth();
-      getLogger().info("Reconnection due to exception handling a memcached "
+      getLogger().info("Reconnection due to exception handling a client "
         + "operation on %s. This may be due to an authentication failure.",
         node, e);
       lostConnection(node);
@@ -773,7 +773,7 @@ public class MemcachedConnection extends SpyThread {
       if (!done || testOp.isCancelled() || testOp.hasErrored()
         || testOp.isTimedOut()) {
         throw new ConnectException("Could not send noop upon connect! "
-          + "This may indicate a running, but not responding memcached "
+          + "This may indicate a running, but not responding client "
           + "instance.");
       }
     }
@@ -1455,7 +1455,7 @@ public class MemcachedConnection extends SpyThread {
         logRunException(e);
       }
     }
-    getLogger().info("Shut down memcached client");
+    getLogger().info("Shut down client client");
   }
 
   /**
@@ -1470,7 +1470,7 @@ public class MemcachedConnection extends SpyThread {
     if (shutDown) {
       getLogger().debug("Exception occurred during shutdown", e);
     } else {
-      getLogger().warn("Problem handling memcached IO", e);
+      getLogger().warn("Problem handling client IO", e);
     }
   }
 

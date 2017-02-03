@@ -1,4 +1,4 @@
-package org.hazelcast.memcached;
+package org.hazelcast.client;
 
 import com.hazelcast.logging.ILogger;
 import com.hazelcast.logging.Logger;
@@ -16,9 +16,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class MainClient {
+public class MemcachedMainClient {
 
-    private final static ILogger log = Logger.getLogger(MainClient.class);
+    private final static ILogger log = Logger.getLogger(MemcachedMainClient.class);
 
     private MemcachedClient CLIENT;
     private ExecutorService SERVICE;
@@ -37,7 +37,7 @@ public class MainClient {
     private Thread tpsMonitor;
 
 
-    MainClient() {
+    MemcachedMainClient() {
         setProperties();
         initGlobal();
         initServicePool();
@@ -201,11 +201,7 @@ public class MainClient {
             e.printStackTrace();
         }
         log.info("Load complete.. ");
-        try {
-            LOADERS.awaitTermination(5, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
        // CLIENT.shutdown();
     }
 
@@ -274,6 +270,6 @@ public class MainClient {
     }
 
     public static void main(String[] args) {
-        new MainClient();
+        new MemcachedMainClient();
     }
 }

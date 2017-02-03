@@ -28,7 +28,7 @@ import net.spy.memcached.CachedData;
 import net.spy.memcached.util.StringUtils;
 
 /**
- * Transcoder that provides compatibility with Greg Whalin's memcached client.
+ * Transcoder that provides compatibility with Greg Whalin's client client.
  */
 public class WhalinTranscoder extends BaseSerializingTranscoder implements
     Transcoder<Object> {
@@ -58,7 +58,7 @@ public class WhalinTranscoder extends BaseSerializingTranscoder implements
   /*
    * (non-Javadoc)
    *
-   * @see net.spy.memcached.Transcoder#decode(net.spy.memcached.CachedData)
+   * @see net.spy.client.Transcoder#decode(net.spy.client.CachedData)
    */
   public Object decode(CachedData d) {
     byte[] data = d.getData();

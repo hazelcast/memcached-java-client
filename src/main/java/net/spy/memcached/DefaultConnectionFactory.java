@@ -201,7 +201,7 @@ public class DefaultConnectionFactory extends SpyObject implements
   /*
    * (non-Javadoc)
    *
-   * @see net.spy.memcached.ConnectionFactory#createConnection(java.util.List)
+   * @see net.spy.client.ConnectionFactory#createConnection(java.util.List)
    */
   public MemcachedConnection createConnection(List<InetSocketAddress> addrs)
     throws IOException {
@@ -212,7 +212,7 @@ public class DefaultConnectionFactory extends SpyObject implements
   /*
    * (non-Javadoc)
    *
-   * @see net.spy.memcached.ConnectionFactory#getFailureMode()
+   * @see net.spy.client.ConnectionFactory#getFailureMode()
    */
   public FailureMode getFailureMode() {
     return DEFAULT_FAILURE_MODE;
@@ -221,7 +221,7 @@ public class DefaultConnectionFactory extends SpyObject implements
   /*
    * (non-Javadoc)
    *
-   * @see net.spy.memcached.ConnectionFactory#createOperationQueue()
+   * @see net.spy.client.ConnectionFactory#createOperationQueue()
    */
   public BlockingQueue<Operation> createOperationQueue() {
     return new ArrayBlockingQueue<Operation>(getOpQueueLen());
@@ -230,7 +230,7 @@ public class DefaultConnectionFactory extends SpyObject implements
   /*
    * (non-Javadoc)
    *
-   * @see net.spy.memcached.ConnectionFactory#createReadOperationQueue()
+   * @see net.spy.client.ConnectionFactory#createReadOperationQueue()
    */
   public BlockingQueue<Operation> createReadOperationQueue() {
     return new LinkedBlockingQueue<Operation>();
@@ -239,7 +239,7 @@ public class DefaultConnectionFactory extends SpyObject implements
   /*
    * (non-Javadoc)
    *
-   * @see net.spy.memcached.ConnectionFactory#createWriteOperationQueue()
+   * @see net.spy.client.ConnectionFactory#createWriteOperationQueue()
    */
   public BlockingQueue<Operation> createWriteOperationQueue() {
     return new LinkedBlockingQueue<Operation>();
@@ -248,7 +248,7 @@ public class DefaultConnectionFactory extends SpyObject implements
   /*
    * (non-Javadoc)
    *
-   * @see net.spy.memcached.ConnectionFactory#createLocator(java.util.List)
+   * @see net.spy.client.ConnectionFactory#createLocator(java.util.List)
    */
   public NodeLocator createLocator(List<MemcachedNode> nodes) {
     return new ArrayModNodeLocator(nodes, getHashAlg());
@@ -319,7 +319,7 @@ public class DefaultConnectionFactory extends SpyObject implements
   /*
    * (non-Javadoc)
    *
-   * @see net.spy.memcached.ConnectionFactory#getReadBufSize()
+   * @see net.spy.client.ConnectionFactory#getReadBufSize()
    */
   public int getReadBufSize() {
     return readBufSize;
@@ -328,7 +328,7 @@ public class DefaultConnectionFactory extends SpyObject implements
   /*
    * (non-Javadoc)
    *
-   * @see net.spy.memcached.ConnectionFactory#getHashAlg()
+   * @see net.spy.client.ConnectionFactory#getHashAlg()
    */
   public HashAlgorithm getHashAlg() {
     return hashAlg;
@@ -337,7 +337,7 @@ public class DefaultConnectionFactory extends SpyObject implements
   /*
    * (non-Javadoc)
    *
-   * @see net.spy.memcached.ConnectionFactory#getOperationFactory()
+   * @see net.spy.client.ConnectionFactory#getOperationFactory()
    */
   public OperationFactory getOperationFactory() {
     return new AsciiOperationFactory();
@@ -346,7 +346,7 @@ public class DefaultConnectionFactory extends SpyObject implements
   /*
    * (non-Javadoc)
    *
-   * @see net.spy.memcached.ConnectionFactory#getOperationTimeout()
+   * @see net.spy.client.ConnectionFactory#getOperationTimeout()
    */
   public long getOperationTimeout() {
     return DEFAULT_OPERATION_TIMEOUT;
@@ -355,7 +355,7 @@ public class DefaultConnectionFactory extends SpyObject implements
   /*
    * (non-Javadoc)
    *
-   * @see net.spy.memcached.ConnectionFactory#isDaemon()
+   * @see net.spy.client.ConnectionFactory#isDaemon()
    */
   public boolean isDaemon() {
     return false;
@@ -364,7 +364,7 @@ public class DefaultConnectionFactory extends SpyObject implements
   /*
    * (non-Javadoc)
    *
-   * @see net.spy.memcached.ConnectionFactory#getInitialObservers()
+   * @see net.spy.client.ConnectionFactory#getInitialObservers()
    */
   public Collection<ConnectionObserver> getInitialObservers() {
     return Collections.emptyList();
@@ -373,7 +373,7 @@ public class DefaultConnectionFactory extends SpyObject implements
   /*
    * (non-Javadoc)
    *
-   * @see net.spy.memcached.ConnectionFactory#getDefaultTranscoder()
+   * @see net.spy.client.ConnectionFactory#getDefaultTranscoder()
    */
   public Transcoder<Object> getDefaultTranscoder() {
     return new SerializingTranscoder();
@@ -382,7 +382,7 @@ public class DefaultConnectionFactory extends SpyObject implements
   /*
    * (non-Javadoc)
    *
-   * @see net.spy.memcached.ConnectionFactory#useNagleAlgorithm()
+   * @see net.spy.client.ConnectionFactory#useNagleAlgorithm()
    */
   public boolean useNagleAlgorithm() {
     return false;
@@ -391,7 +391,7 @@ public class DefaultConnectionFactory extends SpyObject implements
   /*
    * (non-Javadoc)
    *
-   * @see net.spy.memcached.ConnectionFactory#shouldOptimize()
+   * @see net.spy.client.ConnectionFactory#shouldOptimize()
    */
   public boolean shouldOptimize() {
     return false;
@@ -400,7 +400,7 @@ public class DefaultConnectionFactory extends SpyObject implements
   /*
    * (non-Javadoc)
    *
-   * @see net.spy.memcached.ConnectionFactory#getMaxReconnectDelay()
+   * @see net.spy.client.ConnectionFactory#getMaxReconnectDelay()
    */
   public long getMaxReconnectDelay() {
     return DEFAULT_MAX_RECONNECT_DELAY;
@@ -409,7 +409,7 @@ public class DefaultConnectionFactory extends SpyObject implements
   /*
    * (non-Javadoc)
    *
-   * @see net.spy.memcached.ConnectionFactory#getAuthDescriptor()
+   * @see net.spy.client.ConnectionFactory#getAuthDescriptor()
    */
   public AuthDescriptor getAuthDescriptor() {
     return null;
@@ -418,7 +418,7 @@ public class DefaultConnectionFactory extends SpyObject implements
   /*
    * (non-Javadoc)
    *
-   * @see net.spy.memcached.ConnectionFactory#getTimeoutExceptionThreshold()
+   * @see net.spy.client.ConnectionFactory#getTimeoutExceptionThreshold()
    */
   public int getTimeoutExceptionThreshold() {
     return DEFAULT_MAX_TIMEOUTEXCEPTION_THRESHOLD;

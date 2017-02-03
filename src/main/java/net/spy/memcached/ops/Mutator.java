@@ -27,11 +27,11 @@ package net.spy.memcached.ops;
  */
 public enum Mutator {
   /**
-   * Increment a value on the memcached server.
+   * Increment a value on the client server.
    */
   incr,
   /**
-   * Decrement a value on the memcached server.
+   * Decrement a value on the client server.
    */
   decr
 }

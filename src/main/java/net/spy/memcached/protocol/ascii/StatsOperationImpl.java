@@ -31,7 +31,7 @@ import net.spy.memcached.ops.StatsOperation;
 import net.spy.memcached.ops.StatusCode;
 
 /**
- * Operation to retrieve statistics from a memcached server.
+ * Operation to retrieve statistics from a client server.
  */
 final class StatsOperationImpl extends OperationImpl implements StatsOperation {
 

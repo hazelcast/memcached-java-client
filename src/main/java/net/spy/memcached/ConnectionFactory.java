@@ -47,15 +47,15 @@ public interface ConnectionFactory {
   /**
    * Create a MemcachedConnection for the given SocketAddresses.
    *
-   * @param addrs the addresses of the memcached servers
+   * @param addrs the addresses of the client servers
    * @return a new MemcachedConnection connected to those addresses
-   * @throws IOException for problems initializing the memcached connections
+   * @throws IOException for problems initializing the client connections
    */
   MemcachedConnection createConnection(List<InetSocketAddress> addrs)
     throws IOException;
 
   /**
-   * Create a new memcached node.
+   * Create a new client node.
    */
   MemcachedNode createMemcachedNode(SocketAddress sa, SocketChannel c,
       int bufSize);
@@ -67,13 +67,13 @@ public interface ConnectionFactory {
 
   /**
    * Create a BlockingQueue for the operations currently expecting to read
-   * responses from memcached.
+   * responses from client.
    */
   BlockingQueue<Operation> createReadOperationQueue();
 
   /**
    * Create a BlockingQueue for the operations currently expecting to write
-   * requests to memcached.
+   * requests to client.
    */
   BlockingQueue<Operation> createWriteOperationQueue();
 

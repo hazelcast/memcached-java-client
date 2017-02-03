@@ -23,11 +23,11 @@
 package net.spy.memcached;
 
 /**
- * A Map interface to memcached.
+ * A Map interface to client.
  *
  * <p>
  * Do note that nothing that iterates over the map will work (such is
- * memcached). All iteration mechanisms will return empty iterators and such.
+ * client). All iteration mechanisms will return empty iterators and such.
  * </p>
  */
 public class CacheMap extends BaseCacheMap<Object> {
