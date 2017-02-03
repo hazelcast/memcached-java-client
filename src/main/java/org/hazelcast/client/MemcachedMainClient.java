@@ -32,6 +32,7 @@ public class MemcachedMainClient {
     private int maxKeys;
     private int ttl;
     private int duration;
+    private int SERVICE_POOL_SIZE;
 
     private Thread latencyMonitor;
     private Thread tpsMonitor;
@@ -129,25 +130,26 @@ public class MemcachedMainClient {
         log.info("Starting benchmark test for "+duration+" seconds");
 
         final int readOpsPercentile = Integer.valueOf(properties.getProperty("read_operations_percentile"));
-        Random rand = new Random();
-        while(!isStopped.get()) {
-            final String key = buildKey(rand.nextInt(maxKeys));
+        for(int i=0; i<SERVICE_POOL_SIZE; i++) {
             SERVICE.execute(new Runnable() {
                 public void run() {
-                    long start = System.nanoTime();
-                    if(txnCounter.get() % 10 < readOpsPercentile) {
-                        get(key);
-                    } else {
-                        put(key, new byte[1024]);
+                    Random rand = new Random();
+                    while(true) {
+                        String key = buildKey(rand.nextInt(maxKeys));
+                        long start = System.nanoTime();
+                        if (txnCounter.get() % 10 < readOpsPercentile) {
+                            get(key);
+                        } else {
+                            put(key, new byte[1024]);
+                        }
+                        long latency = System.nanoTime() - start;
+                        txnCounter.incrementAndGet();
+                        latencyCounter.incrementAndGet();
+                        latencyBucket.addAndGet(latency);
                     }
-                    long latency = System.nanoTime() - start;
-                    txnCounter.incrementAndGet();
-                    latencyCounter.incrementAndGet();
-                    latencyBucket.addAndGet(latency);
                 }
             });
         }
-
     }
 
     private String buildKey(int keyID) {
@@ -266,7 +268,8 @@ public class MemcachedMainClient {
     }
 
     private void initServicePool() {
-        SERVICE = Executors.newFixedThreadPool(Integer.valueOf(properties.getProperty("service_pool_size")));
+        SERVICE_POOL_SIZE = Integer.valueOf(properties.getProperty("service_pool_size"));
+        SERVICE = Executors.newFixedThreadPool(SERVICE_POOL_SIZE);
     }
 
     public static void main(String[] args) {
