@@ -144,7 +144,7 @@ public class HazelcastMainClient {
                         if (txnCounter.get() % 10 < readOpsPercentile) {
                             get(key);
                         } else {
-                            put(key, new byte[1024]);
+                            put(key, getValue(ThreadLocalRandom.current().nextInt(4, 13)));
                         }
                         long latency = System.nanoTime() - start;
                         txnCounter.incrementAndGet();
@@ -232,43 +232,43 @@ public class HazelcastMainClient {
             log.info("Entries loaded by this thread: "+counter);
             latch.countDown();
         }
+    }
 
-        private byte[] getValue(int type) {
-            byte[] value;
-            switch(type) {
-                case 4:
-                    value = new byte[4096];
-                    break;
-                case 5:
-                    value = new byte[5120];
-                    break;
-                case 6:
-                    value = new byte[6144];
-                    break;
-                case 7:
-                    value = new byte[7168];
-                    break;
-                case 8:
-                    value = new byte[8192];
-                    break;
-                case 9:
-                    value = new byte[9216];
-                    break;
-                case 10:
-                    value = new byte[10240];
-                    break;
-                case 11:
-                    value = new byte[11264];
-                    break;
-                case 12:
-                    value = new byte[12288];
-                    break;
-                default:
-                    value = new byte[1024];
-                    break;
-            }
-            return value;
+    private byte[] getValue(int type) {
+        byte[] value;
+        switch(type) {
+            case 4:
+                value = new byte[4096];
+                break;
+            case 5:
+                value = new byte[5120];
+                break;
+            case 6:
+                value = new byte[6144];
+                break;
+            case 7:
+                value = new byte[7168];
+                break;
+            case 8:
+                value = new byte[8192];
+                break;
+            case 9:
+                value = new byte[9216];
+                break;
+            case 10:
+                value = new byte[10240];
+                break;
+            case 11:
+                value = new byte[11264];
+                break;
+            case 12:
+                value = new byte[12288];
+                break;
+            default:
+                value = new byte[1024];
+                break;
         }
+        return value;
     }
 
     private void initServicePool() {
