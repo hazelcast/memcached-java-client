@@ -2,6 +2,8 @@ package org.hazelcast.client;
 
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
+import com.hazelcast.config.InMemoryFormat;
+import com.hazelcast.config.NearCacheConfig;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
 import com.hazelcast.logging.ILogger;
@@ -66,8 +68,21 @@ public class HazelcastMainClient {
     private void initConnection() {
         ClientConfig config = new ClientConfig();
         config.getNetworkConfig().addAddress(properties.getProperty("hazelcast_server_url"));
+        if(Boolean.valueOf(properties.getProperty("enable_near_cache"))) {
+            configureNearCache(config);
+        }
         CLIENT = HazelcastClient.newHazelcastClient(config);
         MAP = CLIENT.getMap(MAP_NAME);
+    }
+
+    private void configureNearCache(ClientConfig config) {
+        NearCacheConfig nearCacheConfig = new NearCacheConfig();
+        if(Boolean.valueOf(properties.getProperty("enable_hd_near_cache"))) {
+            nearCacheConfig.setInMemoryFormat(InMemoryFormat.NATIVE);
+            nearCacheConfig.setMaxSize(500000);
+        }
+        nearCacheConfig.setName("benchmark_map");
+        config.addNearCacheConfig(nearCacheConfig);
     }
 
     private void initTestClock() {
