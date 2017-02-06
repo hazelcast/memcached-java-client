@@ -2,12 +2,15 @@ package org.hazelcast.client;
 
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
+import com.hazelcast.config.EvictionConfig;
 import com.hazelcast.config.InMemoryFormat;
+import com.hazelcast.config.NativeMemoryConfig;
 import com.hazelcast.config.NearCacheConfig;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
 import com.hazelcast.logging.ILogger;
 import com.hazelcast.logging.Logger;
+import com.hazelcast.memory.MemorySize;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -79,9 +82,17 @@ public class HazelcastMainClient {
     private void configureNearCache(ClientConfig config) {
         NearCacheConfig nearCacheConfig = new NearCacheConfig();
         if(Boolean.valueOf(properties.getProperty("enable_hd_near_cache"))) {
+            NativeMemoryConfig nativeMemoryConfig = new NativeMemoryConfig();
+            nativeMemoryConfig.setSize(MemorySize.parse("512m"));
+            nativeMemoryConfig.setEnabled(true);
+
+            config.setNativeMemoryConfig(nativeMemoryConfig);
             nearCacheConfig.setInMemoryFormat(InMemoryFormat.NATIVE);
-            nearCacheConfig.setMaxSize(500000);
+            nearCacheConfig.getEvictionConfig().setSize(1024);
+            nearCacheConfig.getEvictionConfig().setMaximumSizePolicy(EvictionConfig.MaxSizePolicy.FREE_NATIVE_MEMORY_SIZE);
+
         }
+
         nearCacheConfig.setName("benchmark_map");
         config.addNearCacheConfig(nearCacheConfig);
     }

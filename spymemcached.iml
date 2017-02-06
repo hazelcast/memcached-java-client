@@ -18,8 +18,8 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-asm:3.0.3.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.1.1" level="project" />
     <orderEntry type="library" name="Maven: com.codahale.metrics:metrics-core:3.0.1" level="project" />
-    <orderEntry type="library" name="Maven: com.hazelcast:hazelcast:3.7.5" level="project" />
-    <orderEntry type="library" name="Maven: com.hazelcast:hazelcast-client:3.7.5" level="project" />
+    <orderEntry type="library" name="Maven: com.hazelcast:hazelcast-enterprise:3.7.5" level="project" />
+    <orderEntry type="library" name="Maven: com.hazelcast:hazelcast-enterprise-client:3.7.5" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.7" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: jmock:jmock:1.2.0" level="project" />
   </component>
