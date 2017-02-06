@@ -71,6 +71,7 @@ public class HazelcastMainClient {
         if(Boolean.valueOf(properties.getProperty("enable_near_cache"))) {
             configureNearCache(config);
         }
+        config.setLicenseKey("ENTERPRISE_HD#10Nodes#6SyuJ1KA7mEwfNrjlaUbTVOF0IH5k1408100970101110319109011101100");
         CLIENT = HazelcastClient.newHazelcastClient(config);
         MAP = CLIENT.getMap(MAP_NAME);
     }
