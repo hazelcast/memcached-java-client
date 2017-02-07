@@ -5,16 +5,14 @@ import com.hazelcast.logging.Logger;
 import net.spy.memcached.AddrUtil;
 import net.spy.memcached.BinaryConnectionFactory;
 import net.spy.memcached.MemcachedClient;
+import net.spy.memcached.internal.OperationFuture;
 
 import java.io.IOException;
 import java.util.Properties;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -186,7 +184,12 @@ public class MemcachedMainClient {
     }
 
     private void doPut(String key, byte[] value) {
-        CLIENT.set(key, ttl, value);
+        try {
+            OperationFuture future = CLIENT.set(key, ttl, value);
+            future.get();
+        } catch (InterruptedException e) {
+        } catch (ExecutionException e) {
+        }
     }
 
     private Object doGet(String key) {
