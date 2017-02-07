@@ -82,6 +82,7 @@ public class HazelcastMainClient {
         config.setLicenseKey("ENTERPRISE_HD#10Nodes#6SyuJ1KA7mEwfNrjlaUbTVOF0IH5k1408100970101110319109011101100");
         CLIENT = HazelcastClient.newHazelcastClient(config);
         MAP = CLIENT.getMap(MAP_NAME);
+        MAP.clear();
     }
 
     private void configureNearCache(ClientConfig config) {
@@ -135,8 +136,14 @@ public class HazelcastMainClient {
                 while(!isInterrupted()) {
                     try {
                         sleep(5000);
-                        long putLatency = putLatencyBucket.getAndSet(0)/putLatencyCounter.getAndSet(0);
-                        long getLatency = getLatencyBucket.getAndSet(0)/getLatencyCounter.getAndSet(0);
+                        long putLatency = 0;
+                        if(putLatencyCounter.get() > 0) {
+                            putLatency = putLatencyBucket.getAndSet(0) / putLatencyCounter.getAndSet(0);
+                        }
+                        long getLatency = 0;
+                        if(getLatencyCounter.get() > 0) {
+                            getLatency = getLatencyBucket.getAndSet(0) / getLatencyCounter.getAndSet(0);
+                        }
 
                         log.info("Latency: \nAverage Put latency in last 5 seconds: "+ (putLatency/1000) + " us" +
                                 "\nAverage Get latency in last 5 seconds: "+ (getLatency/1000) + " us");
@@ -160,6 +167,7 @@ public class HazelcastMainClient {
                 try {
                     while(!isInterrupted()) {
                         sleep(tpsInterval * 1000);
+
                         log.info("TPS: \nPuts processed per second: "+ putTxnCounter.getAndSet(0)/tpsInterval +
                                 "\nGets processed per second: "+ getTxnCounter.getAndSet(0)/tpsInterval);
                         overallTxnCounter.set(0);
