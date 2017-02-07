@@ -35,9 +35,14 @@ public class HazelcastMainClient {
     private String MAP_NAME = "benchmark_map";
     private IMap MAP;
 
-    private AtomicInteger txnCounter;
-    private AtomicLong latencyBucket;
-    private AtomicInteger latencyCounter;
+    private AtomicInteger putTxnCounter;
+    private AtomicInteger getTxnCounter;
+    private AtomicInteger overallTxnCounter;
+    private AtomicLong putLatencyBucket;
+    private AtomicInteger putLatencyCounter;
+    private AtomicLong getLatencyBucket;
+    private AtomicInteger getLatencyCounter;
+
     private Properties properties;
     private AtomicBoolean isStopped;
     private int maxKeys;
@@ -81,6 +86,8 @@ public class HazelcastMainClient {
 
     private void configureNearCache(ClientConfig config) {
         NearCacheConfig nearCacheConfig = new NearCacheConfig();
+        nearCacheConfig.setInMemoryFormat(InMemoryFormat.OBJECT);
+        
         if(Boolean.valueOf(properties.getProperty("enable_hd_near_cache"))) {
             NativeMemoryConfig nativeMemoryConfig = new NativeMemoryConfig();
             nativeMemoryConfig.setSize(MemorySize.parse("512m"));
@@ -118,15 +125,21 @@ public class HazelcastMainClient {
     }
 
     private void startLatencyMonitor() {
-        latencyBucket = new AtomicLong();
-        latencyCounter = new AtomicInteger();
+        putLatencyBucket = new AtomicLong();
+        putLatencyCounter = new AtomicInteger();
+        getLatencyBucket = new AtomicLong();
+        getLatencyCounter = new AtomicInteger();
+
         latencyMonitor = new Thread() {
             public void run() {
                 while(!isInterrupted()) {
                     try {
                         sleep(5000);
-                        long latency = latencyBucket.getAndSet(0)/latencyCounter.getAndSet(0);
-                        log.info("Average latency in last 5 seconds: "+ (latency/1000) + " us");
+                        long putLatency = putLatencyBucket.getAndSet(0)/putLatencyCounter.getAndSet(0);
+                        long getLatency = getLatencyBucket.getAndSet(0)/getLatencyCounter.getAndSet(0);
+
+                        log.info("Latency: \nAverage Put latency in last 5 seconds: "+ (putLatency/1000) + " us" +
+                                "\nAverage Get latency in last 5 seconds: "+ (getLatency/1000) + " us");
                     } catch (InterruptedException e) {
                     }
                 }
@@ -137,14 +150,19 @@ public class HazelcastMainClient {
     }
 
     private void startTPSMonitor() {
-        txnCounter = new AtomicInteger();
+        overallTxnCounter = new AtomicInteger();
+        putTxnCounter = new AtomicInteger();
+        getTxnCounter = new AtomicInteger();
+
         final int tpsInterval = Integer.valueOf(properties.getProperty("tps_interval"));
         tpsMonitor = new Thread() {
             public void run() {
                 try {
                     while(!isInterrupted()) {
                         sleep(tpsInterval * 1000);
-                        log.info("Transactions processed per second: "+ txnCounter.getAndSet(0)/tpsInterval);
+                        log.info("TPS: \nPuts processed per second: "+ putTxnCounter.getAndSet(0)/tpsInterval +
+                                "\nGets processed per second: "+ getTxnCounter.getAndSet(0)/tpsInterval);
+                        overallTxnCounter.set(0);
                     }
                 } catch (InterruptedException e) {
                 }
@@ -168,15 +186,18 @@ public class HazelcastMainClient {
                     while(true) {
                         String key = buildKey(rand.nextInt(maxKeys));
                         long start = System.nanoTime();
-                        if (txnCounter.get() % 10 < readOpsPercentile) {
-                            get(key);
+                        if (overallTxnCounter.get() % 10 < readOpsPercentile) {
+                            doGet(key);
+                            getTxnCounter.incrementAndGet();
+                            getLatencyCounter.incrementAndGet();
+                            getLatencyBucket.addAndGet(System.nanoTime() - start);
                         } else {
-                            put(key, getValue(ThreadLocalRandom.current().nextInt(4, 13)));
+                            doPut(key, getValue(ThreadLocalRandom.current().nextInt(4, 13)));
+                            putTxnCounter.incrementAndGet();
+                            putLatencyCounter.incrementAndGet();
+                            putLatencyBucket.addAndGet(System.nanoTime() - start);
                         }
-                        long latency = System.nanoTime() - start;
-                        txnCounter.incrementAndGet();
-                        latencyCounter.incrementAndGet();
-                        latencyBucket.addAndGet(latency);
+                        overallTxnCounter.incrementAndGet();
                     }
                 }
             });
@@ -187,11 +208,11 @@ public class HazelcastMainClient {
         return "K"+keyID;
     }
 
-    private void put(String key, byte[] value) {
+    private void doPut(String key, byte[] value) {
         MAP.set(key, value);
     }
 
-    private Object get(String key) {
+    private Object doGet(String key) {
         return MAP.get(key);
     }
 
@@ -253,7 +274,7 @@ public class HazelcastMainClient {
         public void run() {
             int counter =0;
             for(int i=start; i< last; i++) {
-                put(buildKey(i), getValue(ThreadLocalRandom.current().nextInt(4, 13)));
+                doPut(buildKey(i), getValue(ThreadLocalRandom.current().nextInt(4, 13)));
                 counter++;
             }
             log.info("Entries loaded by this thread: "+counter);
