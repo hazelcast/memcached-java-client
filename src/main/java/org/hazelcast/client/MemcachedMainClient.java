@@ -36,6 +36,7 @@ public class MemcachedMainClient {
     private Properties properties;
     private AtomicBoolean isStopped;
     private int maxKeys;
+    private int clientCount;
     private int ttl;
     private int duration;
     private int SERVICE_POOL_SIZE;
@@ -48,8 +49,10 @@ public class MemcachedMainClient {
         setProperties();
         initGlobal();
         initServicePool();
-        initConnection();
+
         String opType = properties.getProperty("operation_type");
+
+        initConnection(opType);
         if(opType.equalsIgnoreCase("load"))
             loadData();
         else {
@@ -62,13 +65,39 @@ public class MemcachedMainClient {
     private void initGlobal() {
         maxKeys = Integer.valueOf(properties.getProperty("max_keys"));
         ttl = Integer.valueOf(properties.getProperty("ttl"));
+        clientCount = Integer.valueOf(properties.getProperty("clientCount"));
     }
 
-    private void initConnection() {
+    private void initConnection(String opType) {
         try {
+            System.out.println("Test SysoutPrintln() .... ... ");
             CLIENT = new MemcachedClient(new BinaryConnectionFactory(), AddrUtil.getAddresses(properties.getProperty("server_url")));
-        } catch (IOException e) {
-            e.printStackTrace();
+            if (!opType.equalsIgnoreCase("load")) {
+                long oldVal = CLIENT.get("ClientQuorum") == null ? 0 : (Long) CLIENT.get("ClientQuorum");
+                CLIENT.set("ClientQuorum", 100000, oldVal+1);
+                log.info("Client connected. Waiting for other clients...");
+                waitAtBarrier();
+                log.info("All clients joined. Stabilising cluster...");
+                stabilise();
+                log.info("Cluster stabilised. Proceeding with benchmark.");
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    private void stabilise() {
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+        }
+    }
+
+    private void waitAtBarrier() {
+        while(((Long)CLIENT.get("ClientQuorum")) != clientCount) {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+            }
         }
     }
 

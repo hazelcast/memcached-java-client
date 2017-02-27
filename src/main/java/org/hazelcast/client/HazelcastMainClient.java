@@ -46,7 +46,7 @@ public class HazelcastMainClient {
     private Properties properties;
     private AtomicBoolean isStopped;
     private int maxKeys;
-    private int ttl;
+    private int clientCount;
     private int duration;
     private int SERVICE_POOL_SIZE;
 
@@ -57,8 +57,10 @@ public class HazelcastMainClient {
         setProperties();
         initGlobal();
         initServicePool();
-        initConnection();
+
         String opType = properties.getProperty("operation_type");
+
+        initConnection(opType);
         if(opType.equalsIgnoreCase("load"))
             loadData();
         else {
@@ -70,10 +72,10 @@ public class HazelcastMainClient {
 
     private void initGlobal() {
         maxKeys = Integer.valueOf(properties.getProperty("max_keys"));
-        ttl = Integer.valueOf(properties.getProperty("ttl"));
+        clientCount = Integer.valueOf(properties.getProperty("clientCount"));
     }
 
-    private void initConnection() {
+    private void initConnection(String opType) {
         ClientConfig config = new ClientConfig();
         config.getNetworkConfig().addAddress(properties.getProperty("hazelcast_server_url"));
         if(Boolean.valueOf(properties.getProperty("enable_near_cache"))) {
@@ -81,8 +83,32 @@ public class HazelcastMainClient {
         }
         config.setLicenseKey("ENTERPRISE_HD#10Nodes#6SyuJ1KA7mEwfNrjlaUbTVOF0IH5k1408100970101110319109011101100");
         CLIENT = HazelcastClient.newHazelcastClient(config);
+
+        if (!opType.equalsIgnoreCase("load")) {
+            CLIENT.getAtomicLong("ClientQuorum").incrementAndGet();
+            log.info("Client connected. Waiting for other clients...");
+            waitAtBarrier();
+            log.info("All clients joined. Stabilising cluster...");
+            stabilise();
+            log.info("Cluster stabilised. Proceeding with benchmark.");
+        }
         MAP = CLIENT.getMap(MAP_NAME);
-        MAP.clear();
+    }
+
+    private void stabilise() {
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+        }
+    }
+
+    private void waitAtBarrier() {
+        while(CLIENT.getAtomicLong("ClientQuorum").get() != clientCount) {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+            }
+        }
     }
 
     private void configureNearCache(ClientConfig config) {
@@ -98,7 +124,6 @@ public class HazelcastMainClient {
             nearCacheConfig.setInMemoryFormat(InMemoryFormat.NATIVE);
             nearCacheConfig.getEvictionConfig().setSize(1024);
             nearCacheConfig.getEvictionConfig().setMaximumSizePolicy(EvictionConfig.MaxSizePolicy.FREE_NATIVE_MEMORY_SIZE);
-
         }
 
         nearCacheConfig.setName("benchmark_map");

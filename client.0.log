@@ -1,0 +1,249 @@
+Test SysoutPrintln() .... ... 
+2017-02-27 16:14:01.419 INFO net.spy.memcached.MemcachedConnection:  Added {QA sa=localhost/127.0.0.1:8000, #Rops=0, #Wops=0, #iq=0, topRop=null, topWop=null, toWrite=0, interested=0} to connect queue
+Feb 27, 2017 4:14:01 PM org.hazelcast.client.MemcachedMainClient
+INFO: Client connected. Waiting for other clients...
+2017-02-27 16:14:35.524 INFO net.spy.memcached.MemcachedConnection:  Reconnecting due to exception on {QA sa=localhost/127.0.0.1:8000, #Rops=1, #Wops=0, #iq=0, topRop=Cmd: 0 Opaque: 20 Key: ClientQuorum, topWop=null, toWrite=0, interested=1}
+java.io.IOException: Disconnected unexpected, will reconnect.
+	at net.spy.memcached.MemcachedConnection.handleReadsWhenChannelEndOfStream(MemcachedConnection.java:911)
+	at net.spy.memcached.MemcachedConnection.handleReads(MemcachedConnection.java:823)
+	at net.spy.memcached.MemcachedConnection.handleReadsAndWrites(MemcachedConnection.java:720)
+	at net.spy.memcached.MemcachedConnection.handleIO(MemcachedConnection.java:683)
+	at net.spy.memcached.MemcachedConnection.handleIO(MemcachedConnection.java:436)
+	at net.spy.memcached.MemcachedConnection.run(MemcachedConnection.java:1445)
+2017-02-27 16:14:35.526 WARN net.spy.memcached.MemcachedConnection:  Closing, and reopening {QA sa=localhost/127.0.0.1:8000, #Rops=1, #Wops=0, #iq=0, topRop=Cmd: 0 Opaque: 20 Key: ClientQuorum, topWop=null, toWrite=0, interested=1}, attempt 0.
+2017-02-27 16:14:35.528 WARN net.spy.memcached.protocol.binary.BinaryMemcachedNodeImpl:  Discarding partially completed op: Cmd: 0 Opaque: 20 Key: ClientQuorum
+Feb 27, 2017 4:14:35 PM org.hazelcast.client.MemcachedMainClient
+INFO: Starting benchmark test for 100 seconds
+2017-02-27 16:14:35.533 WARN net.spy.memcached.MemcachedConnection:  Could not redistribute to another node, retrying primary node for K102.
+2017-02-27 16:14:35.533 WARN net.spy.memcached.MemcachedConnection:  Could not redistribute to another node, retrying primary node for K745.
+2017-02-27 16:14:37.531 INFO net.spy.memcached.MemcachedConnection:  Reconnecting {QA sa=localhost/127.0.0.1:8000, #Rops=0, #Wops=2, #iq=0, topRop=null, topWop=Cmd: 0 Opaque: 21 Key: K102, toWrite=0, interested=0}
+2017-02-27 16:14:37.532 INFO net.spy.memcached.MemcachedConnection:  Reconnecting due to failure to connect to {QA sa=localhost/127.0.0.1:8000, #Rops=0, #Wops=2, #iq=0, topRop=null, topWop=Cmd: 0 Opaque: 21 Key: K102, toWrite=0, interested=0}
+java.net.ConnectException: Connection refused
+	at sun.nio.ch.SocketChannelImpl.checkConnect(Native Method)
+	at sun.nio.ch.SocketChannelImpl.finishConnect(SocketChannelImpl.java:717)
+	at net.spy.memcached.MemcachedConnection.handleIO(MemcachedConnection.java:677)
+	at net.spy.memcached.MemcachedConnection.handleIO(MemcachedConnection.java:436)
+	at net.spy.memcached.MemcachedConnection.run(MemcachedConnection.java:1445)
+2017-02-27 16:14:37.533 WARN net.spy.memcached.MemcachedConnection:  Closing, and reopening {QA sa=localhost/127.0.0.1:8000, #Rops=0, #Wops=2, #iq=0, topRop=null, topWop=Cmd: 0 Opaque: 21 Key: K102, toWrite=0, interested=0}, attempt 1.
+Exception in thread "pool-1-thread-2" Exception in thread "pool-1-thread-1" net.spy.memcached.OperationTimeoutException: Timeout waiting for value: waited 2,500 ms. Node status: Connection Status { localhost/127.0.0.1:8000 active: false, authed: true, last read: 4,518 ms ago }
+	at net.spy.memcached.MemcachedClient.get(MemcachedClient.java:1241)
+	at net.spy.memcached.MemcachedClient.get(MemcachedClient.java:1257)
+	at org.hazelcast.client.MemcachedMainClient.doGet(MemcachedMainClient.java:225)
+	at org.hazelcast.client.MemcachedMainClient.access$1300(MemcachedMainClient.java:20)
+	at org.hazelcast.client.MemcachedMainClient$5.run(MemcachedMainClient.java:194)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: net.spy.memcached.internal.CheckedOperationTimeoutException: Timed out waiting for operation - failing node: localhost/127.0.0.1:8000
+	at net.spy.memcached.internal.OperationFuture.get(OperationFuture.java:167)
+	at net.spy.memcached.internal.GetFuture.get(GetFuture.java:69)
+	at net.spy.memcached.MemcachedClient.get(MemcachedClient.java:1230)
+	... 7 more
+net.spy.memcached.OperationTimeoutException: Timeout waiting for value: waited 2,500 ms. Node status: Connection Status { localhost/127.0.0.1:8000 active: false, authed: true, last read: 4,518 ms ago }
+	at net.spy.memcached.MemcachedClient.get(MemcachedClient.java:1241)
+	at net.spy.memcached.MemcachedClient.get(MemcachedClient.java:1257)
+	at org.hazelcast.client.MemcachedMainClient.doGet(MemcachedMainClient.java:225)
+	at org.hazelcast.client.MemcachedMainClient.access$1300(MemcachedMainClient.java:20)
+	at org.hazelcast.client.MemcachedMainClient$5.run(MemcachedMainClient.java:194)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: net.spy.memcached.internal.CheckedOperationTimeoutException: Timed out waiting for operation - failing node: localhost/127.0.0.1:8000
+	at net.spy.memcached.internal.OperationFuture.get(OperationFuture.java:167)
+	at net.spy.memcached.internal.GetFuture.get(GetFuture.java:69)
+	at net.spy.memcached.MemcachedClient.get(MemcachedClient.java:1230)
+	... 7 more
+Feb 27, 2017 4:14:40 PM org.hazelcast.client.MemcachedMainClient
+INFO: Latency: 
+Average Put latency in last 5 seconds: 0 us
+Average Get latency in last 5 seconds: 0 us
+Feb 27, 2017 4:14:40 PM org.hazelcast.client.MemcachedMainClient
+INFO: TPS: 
+Puts processed per second: 0
+Gets processed per second: 0
+2017-02-27 16:14:41.538 INFO net.spy.memcached.MemcachedConnection:  Reconnecting {QA sa=localhost/127.0.0.1:8000, #Rops=0, #Wops=2, #iq=0, topRop=null, topWop=Cmd: 0 Opaque: 21 Key: K102, toWrite=0, interested=0}
+2017-02-27 16:14:41.539 INFO net.spy.memcached.MemcachedConnection:  Reconnecting due to failure to connect to {QA sa=localhost/127.0.0.1:8000, #Rops=0, #Wops=2, #iq=0, topRop=null, topWop=Cmd: 0 Opaque: 21 Key: K102, toWrite=0, interested=0}
+java.net.ConnectException: Connection refused
+	at sun.nio.ch.SocketChannelImpl.checkConnect(Native Method)
+	at sun.nio.ch.SocketChannelImpl.finishConnect(SocketChannelImpl.java:717)
+	at net.spy.memcached.MemcachedConnection.handleIO(MemcachedConnection.java:677)
+	at net.spy.memcached.MemcachedConnection.handleIO(MemcachedConnection.java:436)
+	at net.spy.memcached.MemcachedConnection.run(MemcachedConnection.java:1445)
+2017-02-27 16:14:41.540 WARN net.spy.memcached.MemcachedConnection:  Closing, and reopening {QA sa=localhost/127.0.0.1:8000, #Rops=0, #Wops=2, #iq=0, topRop=null, topWop=Cmd: 0 Opaque: 21 Key: K102, toWrite=0, interested=0}, attempt 2.
+Feb 27, 2017 4:14:45 PM org.hazelcast.client.MemcachedMainClient
+INFO: Latency: 
+Average Put latency in last 5 seconds: 0 us
+Average Get latency in last 5 seconds: 0 us
+Feb 27, 2017 4:14:45 PM org.hazelcast.client.MemcachedMainClient
+INFO: TPS: 
+Puts processed per second: 0
+Gets processed per second: 0
+2017-02-27 16:14:49.545 INFO net.spy.memcached.MemcachedConnection:  Reconnecting {QA sa=localhost/127.0.0.1:8000, #Rops=0, #Wops=2, #iq=0, topRop=null, topWop=Cmd: 0 Opaque: 21 Key: K102, toWrite=0, interested=0}
+2017-02-27 16:14:49.546 INFO net.spy.memcached.MemcachedConnection:  Reconnecting due to failure to connect to {QA sa=localhost/127.0.0.1:8000, #Rops=0, #Wops=2, #iq=0, topRop=null, topWop=Cmd: 0 Opaque: 21 Key: K102, toWrite=0, interested=0}
+java.net.ConnectException: Connection refused
+	at sun.nio.ch.SocketChannelImpl.checkConnect(Native Method)
+	at sun.nio.ch.SocketChannelImpl.finishConnect(SocketChannelImpl.java:717)
+	at net.spy.memcached.MemcachedConnection.handleIO(MemcachedConnection.java:677)
+	at net.spy.memcached.MemcachedConnection.handleIO(MemcachedConnection.java:436)
+	at net.spy.memcached.MemcachedConnection.run(MemcachedConnection.java:1445)
+2017-02-27 16:14:49.547 WARN net.spy.memcached.MemcachedConnection:  Closing, and reopening {QA sa=localhost/127.0.0.1:8000, #Rops=0, #Wops=2, #iq=0, topRop=null, topWop=Cmd: 0 Opaque: 21 Key: K102, toWrite=0, interested=0}, attempt 3.
+Feb 27, 2017 4:14:50 PM org.hazelcast.client.MemcachedMainClient
+INFO: Latency: 
+Average Put latency in last 5 seconds: 0 us
+Average Get latency in last 5 seconds: 0 us
+Feb 27, 2017 4:14:50 PM org.hazelcast.client.MemcachedMainClient
+INFO: TPS: 
+Puts processed per second: 0
+Gets processed per second: 0
+Feb 27, 2017 4:14:55 PM org.hazelcast.client.MemcachedMainClient
+INFO: Latency: 
+Average Put latency in last 5 seconds: 0 us
+Average Get latency in last 5 seconds: 0 us
+Feb 27, 2017 4:14:55 PM org.hazelcast.client.MemcachedMainClient
+INFO: TPS: 
+Puts processed per second: 0
+Gets processed per second: 0
+Feb 27, 2017 4:15:00 PM org.hazelcast.client.MemcachedMainClient
+INFO: Latency: 
+Average Put latency in last 5 seconds: 0 us
+Average Get latency in last 5 seconds: 0 us
+Feb 27, 2017 4:15:00 PM org.hazelcast.client.MemcachedMainClient
+INFO: TPS: 
+Puts processed per second: 0
+Gets processed per second: 0
+2017-02-27 16:15:05.552 INFO net.spy.memcached.MemcachedConnection:  Reconnecting {QA sa=localhost/127.0.0.1:8000, #Rops=0, #Wops=2, #iq=0, topRop=null, topWop=Cmd: 0 Opaque: 21 Key: K102, toWrite=0, interested=0}
+Feb 27, 2017 4:15:05 PM org.hazelcast.client.MemcachedMainClient
+INFO: Latency: 
+Average Put latency in last 5 seconds: 0 us
+Average Get latency in last 5 seconds: 0 us
+2017-02-27 16:15:05.554 INFO net.spy.memcached.MemcachedConnection:  Reconnecting due to failure to connect to {QA sa=localhost/127.0.0.1:8000, #Rops=0, #Wops=2, #iq=0, topRop=null, topWop=Cmd: 0 Opaque: 21 Key: K102, toWrite=0, interested=0}
+Feb 27, 2017 4:15:05 PM org.hazelcast.client.MemcachedMainClient
+INFO: TPS: 
+Puts processed per second: 0
+Gets processed per second: 0
+java.net.ConnectException: Connection refused
+	at sun.nio.ch.SocketChannelImpl.checkConnect(Native Method)
+	at sun.nio.ch.SocketChannelImpl.finishConnect(SocketChannelImpl.java:717)
+	at net.spy.memcached.MemcachedConnection.handleIO(MemcachedConnection.java:677)
+	at net.spy.memcached.MemcachedConnection.handleIO(MemcachedConnection.java:436)
+	at net.spy.memcached.MemcachedConnection.run(MemcachedConnection.java:1445)
+2017-02-27 16:15:05.555 WARN net.spy.memcached.MemcachedConnection:  Closing, and reopening {QA sa=localhost/127.0.0.1:8000, #Rops=0, #Wops=2, #iq=0, topRop=null, topWop=Cmd: 0 Opaque: 21 Key: K102, toWrite=0, interested=0}, attempt 4.
+Feb 27, 2017 4:15:10 PM org.hazelcast.client.MemcachedMainClient
+INFO: Latency: 
+Average Put latency in last 5 seconds: 0 us
+Average Get latency in last 5 seconds: 0 us
+Feb 27, 2017 4:15:10 PM org.hazelcast.client.MemcachedMainClient
+INFO: TPS: 
+Puts processed per second: 0
+Gets processed per second: 0
+Feb 27, 2017 4:15:15 PM org.hazelcast.client.MemcachedMainClient
+INFO: Latency: 
+Average Put latency in last 5 seconds: 0 us
+Average Get latency in last 5 seconds: 0 us
+Feb 27, 2017 4:15:15 PM org.hazelcast.client.MemcachedMainClient
+INFO: TPS: 
+Puts processed per second: 0
+Gets processed per second: 0
+Feb 27, 2017 4:15:20 PM org.hazelcast.client.MemcachedMainClient
+INFO: Latency: 
+Average Put latency in last 5 seconds: 0 us
+Average Get latency in last 5 seconds: 0 us
+Feb 27, 2017 4:15:20 PM org.hazelcast.client.MemcachedMainClient
+INFO: TPS: 
+Puts processed per second: 0
+Gets processed per second: 0
+Feb 27, 2017 4:15:25 PM org.hazelcast.client.MemcachedMainClient
+INFO: Latency: 
+Average Put latency in last 5 seconds: 0 us
+Average Get latency in last 5 seconds: 0 us
+Feb 27, 2017 4:15:25 PM org.hazelcast.client.MemcachedMainClient
+INFO: TPS: 
+Puts processed per second: 0
+Gets processed per second: 0
+Feb 27, 2017 4:15:30 PM org.hazelcast.client.MemcachedMainClient
+INFO: Latency: 
+Average Put latency in last 5 seconds: 0 us
+Average Get latency in last 5 seconds: 0 us
+Feb 27, 2017 4:15:30 PM org.hazelcast.client.MemcachedMainClient
+INFO: TPS: 
+Puts processed per second: 0
+Gets processed per second: 0
+Feb 27, 2017 4:15:35 PM org.hazelcast.client.MemcachedMainClient
+INFO: TPS: 
+Puts processed per second: 0
+Gets processed per second: 0
+Feb 27, 2017 4:15:35 PM org.hazelcast.client.MemcachedMainClient
+INFO: Latency: 
+Average Put latency in last 5 seconds: 0 us
+Average Get latency in last 5 seconds: 0 us
+2017-02-27 16:15:37.556 INFO net.spy.memcached.MemcachedConnection:  Reconnecting {QA sa=localhost/127.0.0.1:8000, #Rops=0, #Wops=2, #iq=0, topRop=null, topWop=Cmd: 0 Opaque: 21 Key: K102, toWrite=0, interested=0}
+2017-02-27 16:15:37.557 INFO net.spy.memcached.MemcachedConnection:  Reconnecting due to failure to connect to {QA sa=localhost/127.0.0.1:8000, #Rops=0, #Wops=2, #iq=0, topRop=null, topWop=Cmd: 0 Opaque: 21 Key: K102, toWrite=0, interested=0}
+java.net.ConnectException: Connection refused
+	at sun.nio.ch.SocketChannelImpl.checkConnect(Native Method)
+	at sun.nio.ch.SocketChannelImpl.finishConnect(SocketChannelImpl.java:717)
+	at net.spy.memcached.MemcachedConnection.handleIO(MemcachedConnection.java:677)
+	at net.spy.memcached.MemcachedConnection.handleIO(MemcachedConnection.java:436)
+	at net.spy.memcached.MemcachedConnection.run(MemcachedConnection.java:1445)
+2017-02-27 16:15:37.557 WARN net.spy.memcached.MemcachedConnection:  Closing, and reopening {QA sa=localhost/127.0.0.1:8000, #Rops=0, #Wops=2, #iq=0, topRop=null, topWop=Cmd: 0 Opaque: 21 Key: K102, toWrite=0, interested=0}, attempt 5.
+Feb 27, 2017 4:15:40 PM org.hazelcast.client.MemcachedMainClient
+INFO: Latency: 
+Average Put latency in last 5 seconds: 0 us
+Average Get latency in last 5 seconds: 0 us
+Feb 27, 2017 4:15:40 PM org.hazelcast.client.MemcachedMainClient
+INFO: TPS: 
+Puts processed per second: 0
+Gets processed per second: 0
+Feb 27, 2017 4:15:45 PM org.hazelcast.client.MemcachedMainClient
+INFO: Latency: 
+Average Put latency in last 5 seconds: 0 us
+Average Get latency in last 5 seconds: 0 us
+Feb 27, 2017 4:15:45 PM org.hazelcast.client.MemcachedMainClient
+INFO: TPS: 
+Puts processed per second: 0
+Gets processed per second: 0
+Feb 27, 2017 4:15:50 PM org.hazelcast.client.MemcachedMainClient
+INFO: Latency: 
+Average Put latency in last 5 seconds: 0 us
+Average Get latency in last 5 seconds: 0 us
+Feb 27, 2017 4:15:50 PM org.hazelcast.client.MemcachedMainClient
+INFO: TPS: 
+Puts processed per second: 0
+Gets processed per second: 0
+Feb 27, 2017 4:15:55 PM org.hazelcast.client.MemcachedMainClient
+INFO: Latency: 
+Average Put latency in last 5 seconds: 0 us
+Average Get latency in last 5 seconds: 0 us
+Feb 27, 2017 4:15:55 PM org.hazelcast.client.MemcachedMainClient
+INFO: TPS: 
+Puts processed per second: 0
+Gets processed per second: 0
+Feb 27, 2017 4:16:00 PM org.hazelcast.client.MemcachedMainClient
+INFO: Latency: 
+Average Put latency in last 5 seconds: 0 us
+Average Get latency in last 5 seconds: 0 us
+Feb 27, 2017 4:16:00 PM org.hazelcast.client.MemcachedMainClient
+INFO: TPS: 
+Puts processed per second: 0
+Gets processed per second: 0
+Feb 27, 2017 4:16:05 PM org.hazelcast.client.MemcachedMainClient
+INFO: Latency: 
+Average Put latency in last 5 seconds: 0 us
+Average Get latency in last 5 seconds: 0 us
+Feb 27, 2017 4:16:05 PM org.hazelcast.client.MemcachedMainClient
+INFO: TPS: 
+Puts processed per second: 0
+Gets processed per second: 0
+Feb 27, 2017 4:16:10 PM org.hazelcast.client.MemcachedMainClient
+INFO: Latency: 
+Average Put latency in last 5 seconds: 0 us
+Average Get latency in last 5 seconds: 0 us
+Feb 27, 2017 4:16:10 PM org.hazelcast.client.MemcachedMainClient
+INFO: TPS: 
+Puts processed per second: 0
+Gets processed per second: 0
+Feb 27, 2017 4:16:15 PM org.hazelcast.client.MemcachedMainClient
+INFO: Test complete. Initiating shutdown...
+Feb 27, 2017 4:16:20 PM org.hazelcast.client.MemcachedMainClient
+INFO: Latency: 
+Average Put latency in last 5 seconds: 0 us
+Average Get latency in last 5 seconds: 0 us
