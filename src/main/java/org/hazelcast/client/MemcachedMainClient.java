@@ -70,7 +70,6 @@ public class MemcachedMainClient {
 
     private void initConnection(String opType) {
         try {
-            System.out.println("Test SysoutPrintln() .... ... ");
             CLIENT = new MemcachedClient(new BinaryConnectionFactory(), AddrUtil.getAddresses(properties.getProperty("server_url")));
             if (!opType.equalsIgnoreCase("load")) {
                 long oldVal = CLIENT.get("ClientQuorum") == null ? 0 : (Long) CLIENT.get("ClientQuorum");
